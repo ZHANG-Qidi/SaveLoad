@@ -1,0 +1,8 @@
+* Introduction
+A tool to manage the game save data.
+Developing using VBA by VS-Code XVBA plugin.
+
+- SaveLoad.xlsm
+  The tool to manage the save date.
+- SaveLoad
+  The game save data will save to here.

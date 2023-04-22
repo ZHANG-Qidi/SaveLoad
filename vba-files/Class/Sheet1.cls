@@ -82,6 +82,11 @@ Private Sub CommandButton_Save_Save_Click()
     If gl_game_name = "" Or gl_profile_name = "" Then
         Exit Sub
     End If
+    For Each cell In gl_save_name_all_range.Cells
+        If cell.Value = gl_save_name_new Then
+            Exit Sub
+        End If
+    Next
     With CreateObject("Scripting.FileSystemObject")
         If gl_save_name_last <> "" And .FolderExists(gl_save_name_last_path) Then
             .DeleteFolder gl_save_name_last_path, True

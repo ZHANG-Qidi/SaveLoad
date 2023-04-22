@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Private Sub CommandButton_Cancel_Click()
     Unload Me
 End Sub
@@ -21,12 +20,16 @@ End Sub
 Private Sub CommandButton_OK_Click()
     gl_game_name = TextBox_Name.Value
     gl_save_path = TextBox_Path.Value
+    gl_save_file_path = TextBox_File.Value
     gl_game_path = ThisWorkbook.Path & "\SaveLoad\" & gl_game_name
     If gl_game_name = "" Then
         MsgBox "Please Input Game Name"
         Exit Sub
     ElseIf gl_save_path = "" Then
         MsgBox "Please Input Game Path"
+        Exit Sub
+    ElseIf gl_save_file_path = "" Then
+        MsgBox "Please Input Game File"
         Exit Sub
     End If
     With CreateObject("Scripting.FileSystemObject")
@@ -35,6 +38,7 @@ Private Sub CommandButton_OK_Click()
         End If
         With .CreateTextFile(gl_game_path & "\Path.txt", True, True)
             .WriteLine (gl_save_path)
+            .WriteLine (gl_save_file_path)
             .Close
         End With
     End With
@@ -56,6 +60,21 @@ Private Sub CommandButton_Path_Click()
                     Me.TextBox_Name = Right(.Text, Len(.Text) - InStrRev(.Text, "\"))
                 End With
             End If
+        End If
+    End With
+End Sub
+
+Private Sub CommandButton_File_Click()
+    With Application.FileDialog(msoFileDialogFilePicker)
+        If TextBox_Path.Value = "" Then
+            .InitialFileName = "C:\Users\" & Environ("USERNAME") & "\AppData\"
+        Else
+            .InitialFileName = TextBox_Path.Value
+        End If
+        .AllowMultiSelect = False
+        .Title = "Save File Select"
+        If .Show = True Then
+            Me.TextBox_File.Text = .SelectedItems(1)
         End If
     End With
 End Sub

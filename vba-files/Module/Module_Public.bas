@@ -6,6 +6,7 @@ Public gl_save_name_selected, gl_save_path_selected, gl_save_name_new, gl_save_p
 Public gl_save_name_last_range As Object
 Public gl_save_name_last, gl_save_name_last_path As String
 Public gl_save_name_selected_range As Object
+Public gl_save_file_path As String
 
 Private Sub OptionButtonSlot_range_read_func()
     Dim i As Integer
@@ -24,18 +25,23 @@ Public Sub gl_variable_read_func()
     gl_game_path = ThisWorkbook.Path & "\SaveLoad" & "\" & gl_game_name
     gl_profile_name = gl_profile_name_range.Value
     gl_profile_path = gl_game_path & "\" & gl_profile_name
+    Dim gl_save_file_path_DateLastModified As String
     With CreateObject("Scripting.FileSystemObject")
-        If .FileExists(gl_game_path & "\Path.txt") Then
+        If .fileexists(gl_game_path & "\Path.txt") Then
             With .GetFile(gl_game_path & "\Path.txt").OpenAsTextStream(1, -1)
                 gl_save_path = .ReadLine
+                gl_save_file_path = .ReadLine
                 .Close
             End With
+        End If
+        If .fileexists(gl_save_file_path) Then
+            gl_save_file_path_DateLastModified = Format(.GetFile(gl_save_file_path).DateLastModified, "yyyy-mm-dd-hh-mm-ss")
         End If
     End With
     OptionButtonSlot_range_read_func
     gl_save_name_selected = gl_save_name_selected_range.Value
     gl_save_path_selected = gl_profile_path & "\" & gl_save_name_selected
-    gl_save_name_new = gl_game_name & "." & Format(Now, "yyyy-mm-dd-hh-mm-ss") & ".bak"
+    gl_save_name_new = gl_game_name & "." & gl_save_file_path_DateLastModified & ".bak"
     gl_save_path_new = gl_profile_path & "\" & gl_save_name_new
     gl_save_name_last = gl_save_name_last_range.Value
     gl_save_name_last_path = gl_profile_path & "\" & gl_save_name_last
